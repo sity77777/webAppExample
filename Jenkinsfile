@@ -1,6 +1,6 @@
 pipeline{
-    agent any
     slackSend channel: 'jenkins-project1', message: 'job started'
+    agent any
      tools {
         maven 'Maven' 
     }
