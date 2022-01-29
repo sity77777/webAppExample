@@ -1,5 +1,4 @@
 pipeline{
-    slackSend channel: 'jenkins-project1', message: 'job started'
     agent any
      tools {
         maven 'Maven' 
@@ -8,6 +7,7 @@ pipeline{
         stage("Test"){
             steps{
                 // mvn test
+                slackSend channel: 'jenkins-project1', message: 'job started'
                 sh "mvn test"
                 echo "========executing A========"
             }
