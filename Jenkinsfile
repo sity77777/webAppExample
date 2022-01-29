@@ -2,6 +2,7 @@ pipeline{
     agent any
      tools {
         maven 'Maven' 
+        slackSend channel: 'jenkins-project1', message: 'job started'
     }
     stages{
         stage("Test"){
@@ -43,9 +44,12 @@ pipeline{
         }
         success{
             echo "========pipeline executed successfully ========"
+            slackSend channel: 'jenkins-project1', message: 'success'
         }
         failure{
             echo "========pipeline execution failed========"
+            slackSend channel: 'jenkins-project1', message: 'failed'
+            
         }
     }
 }
