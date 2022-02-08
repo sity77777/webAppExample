@@ -1,0 +1,54 @@
+pipeline{
+    agent any
+     tools {
+        maven 'Maven' 
+    }
+    stages{
+        stage("Test"){
+            steps{
+                // mvn test
+                sh "mvn test"
+                echo "========executing A========"
+            }
+        }
+        stage("Build"){
+            steps{
+                // mvn package
+                sh "mvn package"
+                echo "========executing A========"
+            }
+        }
+        stage("deploy to test"){
+            steps{
+                // deploy on container -> plugin
+                deploy adapters: [tomcat9(credentialsId: 'jenkinsdetails', path: '', url: 'http://65.2.83.36:8080')], contextPath: '/app', war: '**/*.war'
+                echo "========executing A========"
+            }
+        }
+        stage("deploy to prod"){
+            input {
+                message "should we continue?"
+				ok "Yes we should"
+            }
+            steps{
+                // deploy on container -> plugin
+                deploy adapters: [tomcat9(credentialsId: 'jenkinsdetils', path: '', url: 'http://3.111.29.92:8080')], contextPath: '/app', war: '**/*.war'
+                echo "========executing A========"
+            }
+        }
+    }
+    post{
+        always{
+            echo "========always========"
+        }
+        success{
+            echo "========pipeline executed successfully ========"
+            slackSend channel: 'jenkins-project1', message: 'success'
+        }
+        failure{
+            echo "========pipeline execution failed========"
+            slackSend channel: 'jenkins-project1', message: 'failed'
+            
+        }
+    }
+}
